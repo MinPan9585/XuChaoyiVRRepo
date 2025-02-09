@@ -43,4 +43,4 @@ MonoBehaviour:
   mrSafeguard: 0
   enableRecommendMSAA: 0
   recommendSubsamping: 0
-  recommendMSAA: 0
+  recommendMSAA: 1
