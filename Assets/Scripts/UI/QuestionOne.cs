@@ -4,27 +4,21 @@ using UnityEngine;
 
 public class QuestionOne : MonoBehaviour
 {
-    public GameObject mark1;
-    public GameObject mark2;
-    public GameObject mark3;
-    public GameObject mark4;
-    public void AnswerOne()
-    {
-        mark1.SetActive(true);
-    }
+    public GameObject[] marks;
+    //public int index;
+    public int correctIndex;
+    public GameObject piying;
+    public GameObject piyingVfx;
 
-    public void AnswerTwo()
+    public void Answer(int index)
     {
-        mark2.SetActive(true);
-    }
-
-    public void AnswerThree()
-    {
-        mark3.SetActive(true);
-    }
-
-    public void AnswerFour()
-    {
-        mark4.SetActive(true);
+        marks[index-1].SetActive(true);
+        if(correctIndex == index)
+        {
+            //add scroe
+            Instantiate(piyingVfx, piying.transform.position, Quaternion.identity);
+            Destroy(piying, 2);
+            Destroy(gameObject, 2);
+        }
     }
 }
