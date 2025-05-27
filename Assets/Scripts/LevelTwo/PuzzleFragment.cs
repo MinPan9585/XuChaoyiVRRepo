@@ -1,49 +1,44 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
-public class PuzzleFragment : MonoBehaviour
-{
-    private XRGrabInteractable grabInteractable;
-    private bool isGrabbed = false;
+public class PuzzleFragment : XRBaseInteractable
+{ 
     private Vector3 initialPosition;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        // 获取XRGrabInteractable组件
-        grabInteractable = GetComponent<XRGrabInteractable>();
-        if (grabInteractable == null)
-        {
-            grabInteractable = gameObject.AddComponent<XRGrabInteractable>();
-        }
+    private bool isBeingDragged = false; // 标记物体是否正在被拖拽
 
-        // 保存初始位置
+    private void Start()
+    {
+        // 初始化物体的初始位置
         initialPosition = transform.position;
-
-        // 添加事件监听器
-        grabInteractable.selectEntered.AddListener(OnGrab);
-        grabInteractable.selectExited.AddListener(OnRelease);
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
-        // 如果被抓取，则限制Z轴移动
-        if (isGrabbed)
+        base.OnSelectEntered(args);
+        isBeingDragged = true; // 当物体被选中时，标记为正在拖拽
+    }
+
+    protected override void OnSelectExited(SelectExitEventArgs args)
+    {
+        base.OnSelectExited(args);
+        isBeingDragged = false; // 当物体被释放时，取消拖拽标记
+        transform.position = initialPosition; // 恢复到初始位置
+    }
+
+    private void Update()
+    {
+        if (isBeingDragged && firstInteractorSelecting != null)
         {
-            Vector3 newPosition = transform.position;
-            newPosition.z = initialPosition.z; // 保持Z轴不变
-            transform.position = newPosition;
+            // 获取射线交互器的位置
+            Vector3 interactorPosition = firstInteractorSelecting.transform.position;
+
+            // 更新物体的位置，保持 z 轴不变
+            transform.position = new Vector3(interactorPosition.x, interactorPosition.y, initialPosition.z);
         }
-    }
-
-    private void OnGrab(SelectEnterEventArgs args)
-    {
-        isGrabbed = true;
-    }
-
-    private void OnRelease(SelectExitEventArgs args)
-    {
-        isGrabbed = false;
     }
 }
