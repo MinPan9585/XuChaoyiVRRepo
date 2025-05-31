@@ -9,7 +9,7 @@ public class PuzzleFragment : XRBaseInteractable
 { 
     private Vector3 initialPosition;
 
-    private bool isBeingDragged = false; // 标记物体是否正在被拖拽
+    public bool isBeingDragged = false; // 标记物体是否正在被拖拽
 
     private void Start()
     {
@@ -27,7 +27,7 @@ public class PuzzleFragment : XRBaseInteractable
     {
         base.OnSelectExited(args);
         isBeingDragged = false; // 当物体被释放时，取消拖拽标记
-        transform.position = initialPosition; // 恢复到初始位置
+        //transform.position = initialPosition; // 恢复到初始位置
     }
 
     private void Update()
